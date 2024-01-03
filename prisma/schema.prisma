@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+enum Type {
+  General
+  Producer
+}
+
+enum Genre {
+  RAndB
+  HipHop
+  Ballad
+  Pop
+  Jazz
+  Rock
+}
+
+model User {
+  id BigInt @id @default(autoincrement())
+  name String? @db.VarChar(255)
+  email String? @unique @db.VarChar(255)
+  type Type? @default(General)
+  password String? @db.VarChar(255)
+  nickname String? @unique @db.VarChar(255)
+  wallet String? @unique @db.VarChar(255)
+  musics Music[]
+  nfts Nft[]
+  userNfts User_nft[]
+  purcahse Purchase[]
+}
+
+model Music {
+  id BigInt @id @default(autoincrement())
+  title String? @db.VarChar(255)
+  artist String? @db.VarChar(255)
+  cid1 String? @db.VarChar(255)
+  cid2 String? @db.VarChar(255)
+  cid3 String? @db.VarChar(255)
+  sha1 String? @db.VarChar(255)
+  address String? @db.VarChar(255)
+  genre Genre?
+  user User @relation(fields: [user_id], references: [id])
+  user_id BigInt
+  nfts Nft[]
+  purcahse Purchase[]
+}
+
+model Nft {
+  id BigInt @id @default(autoincrement())
+  cid String? @db.VarChar(255)
+  tx_id String? @db.VarChar(255)
+  user User @relation(fields: [user_id], references: [id])
+  user_id BigInt
+  music Music @relation(fields: [music_id], references: [id])
+  music_id BigInt
+  userNfts User_nft[]
+}
+model User_nft {
+  id BigInt @id @default(autoincrement())
+  is_sale Boolean @default(false)
+  user User @relation(fields: [user_id], references: [id])
+  user_id BigInt
+  nft Nft @relation(fields: [nft_id], references: [id])
+  nft_id BigInt
+}
+
+model Purchase {
+  id BigInt @id @default(autoincrement())
+  user User @relation(fields: [user_id], references: [id])
+  user_id BigInt
+  music Music @relation(fields: [music_id], references: [id])
+  music_id BigInt
+}
