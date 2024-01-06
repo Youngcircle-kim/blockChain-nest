@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { CheckWalletDto } from './dto/check-wallet.dto';
 import { Response } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -59,4 +60,7 @@ export class AuthController {
       },
     });
   }
+
+  @Post('/signin')
+  async signIn(@Res() res: Response, @Body() signInDto: SignInDto) {}
 }
